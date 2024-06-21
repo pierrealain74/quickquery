@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\QuestionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,6 +31,31 @@ class Question
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
+
+    /**
+     * @var Collection<int, QuestionTag>
+     */
+    #[ORM\OneToMany(targetEntity: QuestionTag::class, mappedBy: 'question')]
+    private Collection $questionTags;
+
+    /**
+     * @var Collection<int, Participant>
+     */
+    #[ORM\OneToMany(targetEntity: Participant::class, mappedBy: 'question')]
+    private Collection $participants;
+
+    /**
+     * @var Collection<int, Alert>
+     */
+    #[ORM\OneToMany(targetEntity: Alert::class, mappedBy: 'question')]
+    private Collection $alerts;
+
+    public function __construct()
+    {
+        $this->questionTags = new ArrayCollection();
+        $this->participants = new ArrayCollection();
+        $this->alerts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,6 +118,96 @@ class Question
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QuestionTag>
+     */
+    public function getQuestionTags(): Collection
+    {
+        return $this->questionTags;
+    }
+
+    public function addQuestionTag(QuestionTag $questionTag): static
+    {
+        if (!$this->questionTags->contains($questionTag)) {
+            $this->questionTags->add($questionTag);
+            $questionTag->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestionTag(QuestionTag $questionTag): static
+    {
+        if ($this->questionTags->removeElement($questionTag)) {
+            // set the owning side to null (unless already changed)
+            if ($questionTag->getQuestion() === $this) {
+                $questionTag->setQuestion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participant>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Participant $participant): static
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants->add($participant);
+            $participant->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Participant $participant): static
+    {
+        if ($this->participants->removeElement($participant)) {
+            // set the owning side to null (unless already changed)
+            if ($participant->getQuestion() === $this) {
+                $participant->setQuestion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Alert>
+     */
+    public function getAlerts(): Collection
+    {
+        return $this->alerts;
+    }
+
+    public function addAlert(Alert $alert): static
+    {
+        if (!$this->alerts->contains($alert)) {
+            $this->alerts->add($alert);
+            $alert->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAlert(Alert $alert): static
+    {
+        if ($this->alerts->removeElement($alert)) {
+            // set the owning side to null (unless already changed)
+            if ($alert->getQuestion() === $this) {
+                $alert->setQuestion(null);
+            }
+        }
 
         return $this;
     }

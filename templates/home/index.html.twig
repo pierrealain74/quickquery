@@ -1,0 +1,32 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+	<div class="container">		
+		<div class="main">
+            <h2>Questions</h2>
+            {% if dataQuestion is not empty %}
+            <ul>
+                {% for question in dataQuestion %}
+                    <li><b>{{ question.title }}</b></li>
+                    <li>Author: {{ question.author.pseudo }}</li>
+                    <ul><b>Tags</b>
+                    {% for questionTag in question.questionTags %} 
+                        <li>{{ questionTag.tag.name }}</li>
+                    {% endfor %}
+                    </ul>
+                    <ul><b>Participant</b>
+                        {% for questionParticipant in question.participants %} 
+                            <li>{{ questionParticipant.user.pseudo }}</li>
+                        {% endfor %}
+                    </ul>
+                    <ul><b>Alertes</b>
+                        {% for questionAlert in question.alerts %} 
+                            <li>{{ questionAlert.user.pseudo }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor%}
+            </ul>
+            {% else %}<p>Aucune question</p>{% endif %}
+        </div>			
+    </div>			
+{% endblock %}
+
