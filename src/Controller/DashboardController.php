@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DashboardController extends AbstractController
 {
-    #[Route('/', name: 'home')]
+    #[Route('/', name: 'home.index')]
     public function index(QuestionRepository $questionRepository): Response
     {
 
