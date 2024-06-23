@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
 {
@@ -53,11 +52,18 @@ class Question
     #[ORM\OneToMany(targetEntity: Alert::class, mappedBy: 'question')]
     private Collection $alerts;
 
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'questions')]
+    private Collection $tags;
+
     public function __construct()
     {
         $this->questionTags = new ArrayCollection();
         $this->participants = new ArrayCollection();
         $this->alerts = new ArrayCollection();
+        $this->tags = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
     }
 
@@ -212,6 +218,30 @@ class Question
                 $alert->setQuestion(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        $this->tags->removeElement($tag);
 
         return $this;
     }

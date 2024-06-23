@@ -16,7 +16,7 @@ class DashboardController extends AbstractController
 
         $dataQuestion = $questionRepository->findAllWithParticipants();
 
-        return $this->render('home/index.html.twig', [
+        return $this->render('pages/home/index.html.twig', [
             "dataQuestion" => $dataQuestion,
         ]);
     }

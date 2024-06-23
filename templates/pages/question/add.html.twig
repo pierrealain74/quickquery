@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block title %}QuickQuery - Poser une question
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+
+		<h1 class="mt-4">Poser une question</h1>
+
+        {{ form_start(form) }}
+        <div>
+            {{ form_label(form.title) }}
+            {{ form_widget(form.title) }}
+            {{ form_errors(form.title) }}
+        </div>
+
+        <div>
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <div>
+            {{ form_label(form.scheduled_at) }}
+            {{ form_widget(form.scheduled_at) }}
+            {{ form_errors(form.scheduled_at) }}
+        </div>
+
+        <div>
+            {{ form_label(form.tags) }}
+            {{ form_widget(form.tags) }}
+            {{ form_errors(form.tags) }}
+        </div>
+
+        <button class="btn">OK</button>
+    {{ form_end(form) }}
+</div>{% endblock %}
